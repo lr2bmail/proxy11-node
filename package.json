@@ -22,7 +22,7 @@
   "homepage": "https://proxy11.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/proxy11/node-client"
+    "url": "https://github.com/lr2bmail/proxy11-node"
   },
   "files": [
     "src",
