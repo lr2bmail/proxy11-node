@@ -1,0 +1,32 @@
+{
+  "name": "proxy11",
+  "version": "1.0.0",
+  "description": "Lightweight Node.js client for the Proxy11 proxy API",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "proxy",
+    "proxy-list",
+    "free-proxy",
+    "web-scraping",
+    "proxy-api"
+  ],
+  "author": "Proxy11 <info@proxy11.com>",
+  "license": "MIT",
+  "homepage": "https://proxy11.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/proxy11/node-client"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ]
+}
