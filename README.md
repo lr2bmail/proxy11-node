@@ -1,6 +1,12 @@
 # proxy11
 
-Lightweight Node.js client for the [Proxy11](https://proxy11.com) proxy API.
+[![npm](https://img.shields.io/npm/v/proxy11.svg)](https://www.npmjs.com/package/proxy11)
+[![Node](https://img.shields.io/node/v/proxy11.svg)](package.json)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+Official Node.js client for the [Proxy11](https://proxy11.com) proxy API.
+
+Use it to fetch fresh proxy lists, filter by country or anonymity type, rotate through proxies, and export simple `ip:port` files.
 
 ## Install
 
@@ -14,16 +20,18 @@ npm install proxy11
 const { ProxyClient } = require("proxy11");
 
 const client = new ProxyClient("YOUR_API_KEY");
+
+const proxies = await client.get({ limit: 50, country: "us" });
+const proxy = await client.random({ proxyType: "anonymous" });
+const proxyList = await client.asList({ limit: 100 });
 ```
 
-`Proxy11Error`, `APIError`, and `NoProxiesError` are exported if you want to catch client-specific errors.
+## Examples
 
-## Get Proxies
+### Get Proxies
 
 ```js
-const proxies = await client.get();
-
-const usProxies = await client.get({
+const proxies = await client.get({
   limit: 50,
   country: "us",
   proxyType: "anonymous",
@@ -31,24 +39,21 @@ const usProxies = await client.get({
 });
 ```
 
-## Get `ip:port` List
+### Get `ip:port` List
 
 ```js
 const proxies = await client.asList({ limit: 50 });
 // ["103.152.112.166:8080", "45.77.56.114:4145"]
 ```
 
-## Random Proxy
+### Random Proxy
 
 ```js
 const proxy = await client.random({ country: "us" });
-// "103.152.112.166:8080"
-
 const proxyDetails = await client.randomProxy();
-// { ip: "103.152.112.166", port: "8080", country: "Indonesia", ... }
 ```
 
-## Save to File
+### Save to File
 
 ```js
 const count = await client.save("proxies.txt", { country: "us" });
@@ -56,8 +61,6 @@ console.log(`saved ${count} proxies`);
 ```
 
 ## Rotator
-
-Cycle through proxies with optional auto-refresh and dead-proxy removal.
 
 ```js
 const rotator = await client.rotator({
@@ -73,26 +76,55 @@ for (let i = 0; i < 100; i += 1) {
   // if proxy fails:
   // rotator.markDead(proxy);
 }
-
-console.log(`${rotator.remaining} proxies left in pool`);
 ```
 
-## Parameters
+## Error Handling
 
-| Parameter   | Type   | Description                                      |
-|-------------|--------|--------------------------------------------------|
-| `limit`     | number | Max proxies to return (free: 50, ultimate: 5000) |
-| `country`   | string | Filter by country name or code                   |
-| `port`      | number | Filter by port number                            |
-| `speed`     | number | Max response time in seconds                     |
-| `proxyType` | string | `anonymous` or `transparent`                     |
+```js
+const { APIError, NoProxiesError, ProxyClient } = require("proxy11");
 
-## API Key
+const client = new ProxyClient("YOUR_API_KEY");
 
-Get a free API key at [proxy11.com](https://proxy11.com/newaccount).
+try {
+  const proxy = await client.random({ country: "us" });
+  console.log(proxy);
+} catch (error) {
+  if (error instanceof NoProxiesError) {
+    console.log("No proxies matched the filters");
+  } else if (error instanceof APIError) {
+    console.log(`Proxy11 API error: ${error.message}`);
+  } else {
+    throw error;
+  }
+}
+```
 
-- **Free plan**: 50 proxies per request
-- **Ultimate plan**: 5,000 proxies per request, from $12
+## API
+
+| Method | Description |
+|--------|-------------|
+| `get(filters)` | Return proxy rows as objects |
+| `asList(filters)` | Return proxies as `ip:port` strings |
+| `random(filters)` | Return one random `ip:port` proxy |
+| `randomProxy(filters)` | Return one random proxy object |
+| `save(path, filters)` | Save `ip:port` proxies to a file |
+| `rotator(filters)` | Create an async proxy rotator |
+
+## Filters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `limit` | number | Max proxies to return, capped by your plan |
+| `country` | string | Country name or two-letter country code |
+| `port` | number | Proxy port |
+| `speed` | number | Max response time in seconds |
+| `proxyType` | string | `anonymous` or `transparent` |
+
+## Links
+
+- Website: [proxy11.com](https://proxy11.com)
+- API docs: [proxy11.com/apidoc](https://proxy11.com/apidoc)
+- SDK page: [proxy11.com/sdk](https://proxy11.com/sdk)
 
 ## License
 
