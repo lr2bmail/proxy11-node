@@ -1,6 +1,6 @@
 {
   "name": "proxy11",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight Node.js client for the Proxy11 proxy API",
   "main": "src/index.js",
   "type": "commonjs",
